@@ -1,0 +1,174 @@
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+body {
+  background-color: white;
+  color: black;
+}
+
+.simulador-container {
+  background-color: #f4f0fc;
+  padding: 20px;
+  border-radius: 12px;
+  width: 700px;
+  margin: 50px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.titulo {
+  text-align: left;
+  color: rgb(0, 102, 255);
+  margin-bottom: -10px;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.descricao {
+  margin-bottom: 15px;
+  font-size: 1rem;
+  color: black;
+}
+
+.tipo-emprestimo {
+  display: flex;
+  gap: 10px; 
+  margin-bottom: 30px;
+  justify-content: flex-start; 
+}
+
+.tipo-emprestimo label {
+  font-weight: normal;
+  cursor: pointer;
+  color: black;
+  display: flex;
+  align-items: center;
+  gap: 5px; 
+  font-size: 0.90rem; 
+}
+
+.tipo-emprestimo input[type="radio"] {
+  appearance: none; 
+  width: 16px;
+  height: 16px;
+  border: 2px solid #000;
+  border-radius: 50%; 
+  background-color: white; 
+  display: inline-block;
+  margin: 0; 
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.tipo-emprestimo input[type="radio"]:checked {
+  background-color: rgb(0, 102, 255); 
+  border-color: rgb(0, 102, 255);
+}
+
+.inputs-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.input-group label {
+  margin-bottom: 8px;
+  font-weight: normal;
+  color: black;
+  font-size: 0.95rem;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 6px; 
+  overflow: hidden; 
+  background-color: white;
+  height: 35px;
+}
+
+.input-wrapper span {
+  background-color: #e0e0e0;
+  padding: 8px;
+  font-weight: bold;
+  color: #333;
+  border-right: 1px solid #ccc; 
+}
+
+.input-wrapper input {
+  border: none;
+  padding: 8px;
+  flex: 1;
+  text-align: center;
+  background-color: white;
+  color: black;
+  font-size: 0.9rem;
+  border-radius: 0; 
+}
+
+input:focus {
+  outline: none;
+}
+
+
+.buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+button {
+  background-color: rgb(0, 102, 255);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: rgb(4, 55, 131);
+}
+
+.limpar {
+  color: rgb(0, 102, 255);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-left: 10px;
+  transition: color 0.3s;
+}
+
+.limpar:hover {
+  color: rgb(4, 55, 131);
+}
+
+.resultado {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #e0e0e0;
+  border-radius: 6px;
+  text-align: center;
+  color: black;
+}
