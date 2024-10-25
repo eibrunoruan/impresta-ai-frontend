@@ -1,51 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import { simularEmprestimo } from './api'; 
+import { simularEmprestimo } from './api';
+import Redirecionar from './Redirecionar'; 
+import Resultado from './Resultado';
+import Tutorial from './components/Tutorial';
+import Navbar from './components/Navbar';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-function App() {
+function Simulador() {
     const [tipo, setTipo] = useState('');
     const [valor, setValor] = useState('');
     const [taxaJuros, setTaxaJuros] = useState('');
     const [parcelas, setParcelas] = useState('');
     const [resultado, setResultado] = useState(null);
 
+    const handleSubmit = async (event) => {
+        event.preventDefault();
 
-const handleSubmit = async (event) => {
-    event.preventDefault();
+        try {
+            const valorFloat = parseFloat(valor.replace(',', '.'));
+            const taxaFloat = parseFloat(taxaJuros.replace(',', '.'));
+            const parcelasInt = parseInt(parcelas);
 
-    try {
-        const valorFloat = parseFloat(valor.replace(',', '.'));
-        const taxaFloat = parseFloat(taxaJuros.replace(',', '.'));
-        const parcelasInt = parseInt(parcelas);
+            if (!tipo) {
+                alert('Por favor, selecione um tipo de empréstimo!');
+                return;
+            }
 
-        if (!tipo) {
-            alert('Por favor, selecione um tipo de empréstimo!');
-            return;
+            if (isNaN(valorFloat) || isNaN(taxaFloat) || isNaN(parcelasInt)) {
+                alert('Por favor, insira valores válidos!');
+                return;
+            }
+
+            const payload = {
+                valor: valorFloat,
+                parcelas: parcelasInt,
+                taxaJuros: taxaFloat,
+                tipoEmprestimo: tipo,
+            };
+
+            console.log('Payload enviado:', payload);
+
+            const resultadoAPI = await simularEmprestimo(payload);
+            console.log('Resposta da API:', resultadoAPI);
+
+            setResultado(
+                <Redirecionar
+                    tipo={tipo}
+                    valor={valorFloat}
+                    taxaJuros={taxaFloat}
+                    parcelas={parcelasInt}
+                />
+            );
+        } catch (error) {
+            console.error('Erro na simulação:', error);
+            alert('Ocorreu um erro na simulação. Verifique o console para mais detalhes.');
         }
-
-        if (isNaN(valorFloat) || isNaN(taxaFloat) || isNaN(parcelasInt)) {
-            alert('Por favor, insira valores válidos!');
-            return;
-        }
-
-        const payload = {
-            valor: valorFloat,  
-            parcelas: parcelasInt,
-            taxaJuros: taxaFloat,
-            tipoEmprestimo: tipo,  
-        };
-
-        console.log('Payload enviado:', payload); 
-
-        const resultadoAPI = await simularEmprestimo(payload);
-        console.log('Resposta da API:', resultadoAPI); 
-
-        setResultado(resultadoAPI); 
-    } catch (error) {
-        console.error('Erro na simulação:', error); 
-        alert('Ocorreu um erro na simulação. Verifique o console para mais detalhes.');
-    }
-};
+    };
 
     const handleLimpar = () => {
         setTipo('');
@@ -139,24 +150,31 @@ const handleSubmit = async (event) => {
                 </div>
             </form>
 
-            {resultado && (
-                <div className="resultado">
-                    <h2>Resultado</h2>
-                    <p>
-                        Valor da Parcela:{" "}
-                        {typeof resultado.valorParcela === 'number'
-                            ? resultado.valorParcela.toFixed(2)
-                            : 'N/A'}
-                    </p>
-                    <p>
-                        Total Pago:{" "}
-                        {typeof resultado.totalPago === 'number'
-                            ? resultado.totalPago.toFixed(2)
-                            : 'N/A'}
-                    </p>
-                </div>
-            )}
+            {resultado}
         </div>
+    );
+}
+
+function Home() {
+    return (
+        <div>
+            <Simulador /> 
+            <Tutorial />  
+        </div>
+    );
+}
+
+function App() {
+    return (
+        <Router>
+            <Navbar /> 
+            <div className="page-content"> 
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/resultado" element={<Resultado />} />
+                </Routes>
+            </div>
+        </Router>
     );
 }
 

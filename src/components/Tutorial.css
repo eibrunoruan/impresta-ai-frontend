@@ -1,0 +1,42 @@
+.tutorial-container {
+    margin: 50px auto;
+    max-width: 800px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tutorial-container h2 {
+    font-size: 1.5rem;
+    color: #1c1c1c;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.tutorial-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tutorial-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.tutorial-number {
+    background-color: rgb(0, 102, 255);
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
