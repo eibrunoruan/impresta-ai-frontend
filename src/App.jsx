@@ -25,52 +25,54 @@ function Simulador() {
     const [resultado, setResultado] = useState(null);
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
+    event.preventDefault();
 
-        try {
-            const valorFloat = parseFloat(valor.replace(/[R$.\s]/g, '').replace(',', '.'));
-            const taxaFloat = parseFloat(taxaJuros.replace(',', '.'));
-            const parcelasInt = parseInt(parcelas);
+    try {
+        // Remover símbolos de moeda e converter o valor para int
+        const valorInt = parseInt(valor.replace(/[R$.\s]/g, '').replace(',', '.'));
+        const taxaFloat = parseFloat(taxaJuros.replace(',', '.'));
+        const parcelasInt = parseInt(parcelas);
 
-            if (!tipo) {
-                alert('Por favor, selecione um tipo de empréstimo!');
-                return;
-            }
-
-            if (isNaN(valorFloat) || isNaN(taxaFloat) || isNaN(parcelasInt)) {
-                alert('Por favor, insira valores válidos!');
-                return;
-            }
-
-            const payload = {
-                valor: valorFloat,
-                parcelas: parcelasInt,
-                taxaJuros: taxaFloat,
-                tipoEmprestimo: tipo,
-            };
-
-            console.log('Payload enviado:', payload);
-
-            const resultadoAPI = await simularEmprestimo(payload);
-            console.log('Resposta da API:', resultadoAPI);
-
-            setResultado(
-                <Redirecionar
-                    tipo={tipo}
-                    valor={formatarMoedaBRL(valorFloat)}
-                    taxaJuros={taxaFloat}
-                    parcelas={parcelasInt}
-                />
-            );
-
-            // Redirecionar para a página de resultado
-            navigate('/resultado');
-
-        } catch (error) {
-            console.error('Erro na simulação:', error);
-            alert('Ocorreu um erro na simulação. Verifique o console para mais detalhes.');
+        if (!tipo) {
+            alert('Por favor, selecione um tipo de empréstimo!');
+            return;
         }
-    };
+
+        if (isNaN(valorInt) || isNaN(taxaFloat) || isNaN(parcelasInt)) {
+            alert('Por favor, insira valores válidos!');
+            return;
+        }
+
+        const payload = {
+            valor: valorInt,        // Garantindo que valor seja um inteiro
+            parcelas: parcelasInt,  // Garantindo que parcelas seja um inteiro
+            taxaJuros: taxaFloat,   // Garantindo que taxa seja float
+            tipoEmprestimo: tipo,
+        };
+
+        console.log('Payload enviado:', payload);
+
+        const resultadoAPI = await simularEmprestimo(payload);
+        console.log('Resposta da API:', resultadoAPI);
+
+        setResultado(
+            <Redirecionar
+                tipo={tipo}
+                valor={formatarMoedaBRL(valorInt)}
+                taxaJuros={taxaFloat}
+                parcelas={parcelasInt}
+            />
+        );
+
+        // Redirecionar para a página de resultado
+        navigate('/resultado');
+
+    } catch (error) {
+        console.error('Erro na simulação:', error);
+        alert('Ocorreu um erro na simulação. Verifique o console para mais detalhes.');
+    }
+};
+
 
     const handleLimpar = () => {
         setTipo('');
