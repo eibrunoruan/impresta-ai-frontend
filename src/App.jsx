@@ -27,7 +27,7 @@ function Simulador() {
         event.preventDefault();
 
         try {
-            const valorFloat = parseFloat(valor.replace(',', '.'));
+            const valorFloat = parseFloat(valor.replace(/[R$.\s]/g, '').replace(',', '.'));
             const taxaFloat = parseFloat(taxaJuros.replace(',', '.'));
             const parcelasInt = parseInt(parcelas);
 
@@ -118,7 +118,7 @@ function Simulador() {
                             <span>R$</span>
                             <input
                                 id="valor"
-                                type="text" 
+                                type="text"
                                 placeholder="0,00"
                                 value={valor}
                                 onChange={(e) => {
