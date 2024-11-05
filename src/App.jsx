@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { simularEmprestimo } from './api';
-import Redirecionar from './Redirecionar'; 
+import Redirecionar from './Redirecionar';
 import Resultado from './Resultado';
 import Tutorial from './components/Tutorial';
 import Navbar from './components/Navbar';
@@ -118,10 +118,19 @@ function Simulador() {
                             <span>R$</span>
                             <input
                                 id="valor"
-                                type="number"
+                                type="text" 
                                 placeholder="0,00"
-                                value={valor ? formatarMoedaBRL(parseFloat(valor)) : ''} 
-                                onChange={(e) => setValor(e.target.value)}
+                                value={valor}
+                                onChange={(e) => {
+                                    const valorDigitado = e.target.value.replace(/[^\d,]/g, '');
+                                    setValor(valorDigitado);
+                                }}
+                                onBlur={() => {
+                                    const valorNumerico = parseFloat(valor.replace(',', '.'));
+                                    if (!isNaN(valorNumerico)) {
+                                        setValor(formatarMoedaBRL(valorNumerico));
+                                    }
+                                }}
                             />
                         </div>
                     </div>
