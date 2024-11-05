@@ -7,6 +7,15 @@ import Tutorial from './components/Tutorial';
 import Navbar from './components/Navbar';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+const formatarMoedaBRL = (valor) => {
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    }).format(valor);
+};
+
 function Simulador() {
     const [tipo, setTipo] = useState('');
     const [valor, setValor] = useState('');
@@ -47,11 +56,12 @@ function Simulador() {
             setResultado(
                 <Redirecionar
                     tipo={tipo}
-                    valor={valorFloat}
+                    valor={formatarMoedaBRL(valorFloat)}
                     taxaJuros={taxaFloat}
                     parcelas={parcelasInt}
                 />
             );
+
         } catch (error) {
             console.error('Erro na simulação:', error);
             alert('Ocorreu um erro na simulação. Verifique o console para mais detalhes.');
@@ -110,7 +120,7 @@ function Simulador() {
                                 id="valor"
                                 type="number"
                                 placeholder="0,00"
-                                value={valor}
+                                value={valor ? formatarMoedaBRL(parseFloat(valor)) : ''} 
                                 onChange={(e) => setValor(e.target.value)}
                             />
                         </div>
