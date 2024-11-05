@@ -28,7 +28,6 @@ function Simulador() {
         event.preventDefault();
 
         try {
-            // Remover símbolos de moeda e converter o valor para int
             const valorInt = parseInt(valor.replace(/[R$.\s]/g, '').replace(',', '.'));
             const taxaFloat = parseFloat(taxaJuros.replace(',', '.'));
             const parcelasInt = parseInt(parcelas);
