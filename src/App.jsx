@@ -5,7 +5,7 @@ import Redirecionar from './Redirecionar';
 import Resultado from './Resultado';
 import Tutorial from './components/Tutorial';
 import Navbar from './components/Navbar';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 
 const formatarMoedaBRL = (valor) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -17,6 +17,7 @@ const formatarMoedaBRL = (valor) => {
 };
 
 function Simulador() {
+    const navigate = useNavigate();
     const [tipo, setTipo] = useState('');
     const [valor, setValor] = useState('');
     const [taxaJuros, setTaxaJuros] = useState('');
@@ -61,6 +62,9 @@ function Simulador() {
                     parcelas={parcelasInt}
                 />
             );
+
+            // Redirecionar para a página de resultado
+            navigate('/resultado');
 
         } catch (error) {
             console.error('Erro na simulação:', error);
