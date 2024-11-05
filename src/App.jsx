@@ -58,7 +58,7 @@ function Simulador() {
             setResultado(
                 <Redirecionar
                     tipo={tipo}
-                    valor={formatarMoedaBRL(valorInt)}
+                    valor={formatarMoedaBRL(valorFloat)}
                     taxaJuros={taxaFloat}
                     parcelas={parcelasInt}
                 />
