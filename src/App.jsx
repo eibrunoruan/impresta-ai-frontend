@@ -5,7 +5,7 @@ import Redirecionar from './Redirecionar';
 import Resultado from './Resultado';
 import Tutorial from './components/Tutorial';
 import Navbar from './components/Navbar';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const formatarMoedaBRL = (valor) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -17,9 +17,9 @@ const formatarMoedaBRL = (valor) => {
 };
 
 function Simulador() {
-    const navigate = useNavigate();
     const [tipo, setTipo] = useState('');
-    const [valor, setValor] = useState('');
+    const [valor, setValor] = useState('');  // valor formatado
+    const [valorNumerico, setValorNumerico] = useState(null);  // valor numérico para API
     const [taxaJuros, setTaxaJuros] = useState('');
     const [parcelas, setParcelas] = useState('');
     const [resultado, setResultado] = useState(null);
@@ -28,7 +28,6 @@ function Simulador() {
         event.preventDefault();
 
         try {
-            const valorInt = parseInt(valor.replace(/[R$.\s]/g, '').replace(',', '.'));
             const taxaFloat = parseFloat(taxaJuros.replace(',', '.'));
             const parcelasInt = parseInt(parcelas);
 
@@ -37,15 +36,15 @@ function Simulador() {
                 return;
             }
 
-            if (isNaN(valorInt) || isNaN(taxaFloat) || isNaN(parcelasInt)) {
+            if (isNaN(valorNumerico) || isNaN(taxaFloat) || isNaN(parcelasInt)) {
                 alert('Por favor, insira valores válidos!');
                 return;
             }
 
             const payload = {
-                valor: valorInt,        // Garantindo que valor seja um inteiro
-                parcelas: parcelasInt,  // Garantindo que parcelas seja um inteiro
-                taxaJuros: taxaFloat,   // Garantindo que taxa seja float
+                valor: valorNumerico,
+                parcelas: parcelasInt,
+                taxaJuros: taxaFloat,
                 tipoEmprestimo: tipo,
             };
 
@@ -57,14 +56,11 @@ function Simulador() {
             setResultado(
                 <Redirecionar
                     tipo={tipo}
-                    valor={formatarMoedaBRL(valorFloat)}
+                    valor={formatarMoedaBRL(valorNumerico)}
                     taxaJuros={taxaFloat}
                     parcelas={parcelasInt}
                 />
             );
-
-            // Redirecionar para a página de resultado
-            navigate('/resultado');
 
         } catch (error) {
             console.error('Erro na simulação:', error);
@@ -75,6 +71,7 @@ function Simulador() {
     const handleLimpar = () => {
         setTipo('');
         setValor('');
+        setValorNumerico(null);
         setTaxaJuros('');
         setParcelas('');
         setResultado(null);
@@ -122,16 +119,17 @@ function Simulador() {
                             <span>R$</span>
                             <input
                                 id="valor"
-                                type="text"
+                                type="text"  // Mantém o tipo como 'text' para manipular valor formatado
                                 placeholder="0,00"
                                 value={valor}
                                 onChange={(e) => {
                                     const valorDigitado = e.target.value.replace(/[^\d,]/g, '');
                                     setValor(valorDigitado);
+                                    const valorNumerico = parseFloat(valorDigitado.replace(',', '.'));
+                                    setValorNumerico(isNaN(valorNumerico) ? null : valorNumerico);
                                 }}
                                 onBlur={() => {
-                                    const valorNumerico = parseFloat(valor.replace(',', '.'));
-                                    if (!isNaN(valorNumerico)) {
+                                    if (valorNumerico !== null) {
                                         setValor(formatarMoedaBRL(valorNumerico));
                                     }
                                 }}
