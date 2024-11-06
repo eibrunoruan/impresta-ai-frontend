@@ -1,25 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { simularEmprestimo } from './api';
-import Redirecionar from './Redirecionar';
-import Resultado from './Resultado';
-import Tutorial from './components/Tutorial';
-import Navbar from './components/Navbar';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
-const formatarMoedaBRL = (valor) => {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    }).format(valor);
-};
+import Redirecionar from './Redirecionar'; 
+import Resultado from './Resultado';// Importação
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 
 function Simulador() {
     const [tipo, setTipo] = useState('');
-    const [valor, setValor] = useState('');  // valor formatado
-    const [valorNumerico, setValorNumerico] = useState(null);  // valor numérico para API
+    const [valor, setValor] = useState('');
     const [taxaJuros, setTaxaJuros] = useState('');
     const [parcelas, setParcelas] = useState('');
     const [resultado, setResultado] = useState(null);
@@ -28,6 +16,7 @@ function Simulador() {
         event.preventDefault();
 
         try {
+            const valorFloat = parseFloat(valor.replace(',', '.'));
             const taxaFloat = parseFloat(taxaJuros.replace(',', '.'));
             const parcelasInt = parseInt(parcelas);
 
@@ -36,13 +25,13 @@ function Simulador() {
                 return;
             }
 
-            if (isNaN(valorNumerico) || isNaN(taxaFloat) || isNaN(parcelasInt)) {
+            if (isNaN(valorFloat) || isNaN(taxaFloat) || isNaN(parcelasInt)) {
                 alert('Por favor, insira valores válidos!');
                 return;
             }
 
             const payload = {
-                valor: valorNumerico,
+                valor: valorFloat,
                 parcelas: parcelasInt,
                 taxaJuros: taxaFloat,
                 tipoEmprestimo: tipo,
@@ -53,15 +42,15 @@ function Simulador() {
             const resultadoAPI = await simularEmprestimo(payload);
             console.log('Resposta da API:', resultadoAPI);
 
+            // Redireciona para a página de resultado
             setResultado(
                 <Redirecionar
                     tipo={tipo}
-                    valor={formatarMoedaBRL(valorNumerico)}
+                    valor={valorFloat}
                     taxaJuros={taxaFloat}
                     parcelas={parcelasInt}
                 />
             );
-
         } catch (error) {
             console.error('Erro na simulação:', error);
             alert('Ocorreu um erro na simulação. Verifique o console para mais detalhes.');
@@ -71,7 +60,6 @@ function Simulador() {
     const handleLimpar = () => {
         setTipo('');
         setValor('');
-        setValorNumerico(null);
         setTaxaJuros('');
         setParcelas('');
         setResultado(null);
@@ -119,20 +107,10 @@ function Simulador() {
                             <span>R$</span>
                             <input
                                 id="valor"
-                                type="text"  // Mantém o tipo como 'text' para manipular valor formatado
+                                type="number"
                                 placeholder="0,00"
                                 value={valor}
-                                onChange={(e) => {
-                                    const valorDigitado = e.target.value.replace(/[^\d,]/g, '');
-                                    setValor(valorDigitado);
-                                    const valorNumerico = parseFloat(valorDigitado.replace(',', '.'));
-                                    setValorNumerico(isNaN(valorNumerico) ? null : valorNumerico);
-                                }}
-                                onBlur={() => {
-                                    if (valorNumerico !== null) {
-                                        setValor(formatarMoedaBRL(valorNumerico));
-                                    }
-                                }}
+                                onChange={(e) => setValor(e.target.value)}
                             />
                         </div>
                     </div>
@@ -176,25 +154,13 @@ function Simulador() {
     );
 }
 
-function Home() {
-    return (
-        <div>
-            <Simulador /> 
-            <Tutorial />  
-        </div>
-    );
-}
-
 function App() {
     return (
         <Router>
-            <Navbar /> 
-            <div className="page-content"> 
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/resultado" element={<Resultado />} />
-                </Routes>
-            </div>
+            <Routes>
+                <Route path="/" element={<Simulador />} />
+                <Route path="/resultado" element={<Resultado />} />
+            </Routes>
         </Router>
     );
 }
